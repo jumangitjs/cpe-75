@@ -12,9 +12,9 @@ class EntryController extends Controller
     {
         $entries = Entry::all();
 
-        return response()->json([
-            'entries' => $entries
-        ], 200);
+        return response()->json(
+            $entries
+        , 200);
     }
 
     /*
@@ -51,9 +51,9 @@ class EntryController extends Controller
 
         $entry->save();
 
-        return response()->json([
-            'entry' => $entry,
-        ], 201);
+        return response()->json(
+            $entry
+        , 201);
     }
 
     public function putEntry(Request $request, $id)

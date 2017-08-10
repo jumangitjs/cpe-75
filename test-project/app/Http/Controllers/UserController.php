@@ -99,13 +99,15 @@ class UserController extends Controller
 
     public function getUsers()
     {
+        $user = JWTAuth::parseToken()->toUser();
+
         if($this->checkRole())
         {
             $accounts = User::all();
 
-            return response()->json([
-                'accounts' => $accounts
-            ], 200);
+            return response()->json(
+                $accounts
+            , 200);
         }
         else
         {
@@ -148,7 +150,7 @@ class UserController extends Controller
             $user->save();
 
             return response()->json([
-                'entry' => $user
+                $user
             ], 200);
         }
         else
