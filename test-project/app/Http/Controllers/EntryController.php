@@ -2,15 +2,17 @@
 
 namespace App\Http\Controllers;
 
+use App\Liker;
 use Illuminate\Http\Request;
 use App\Entry;
 use JWTAuth;
+use Symfony\Component\CssSelector\Node\ElementNode;
 
 class EntryController extends Controller
 {
     public function getEntries()
     {
-        $entries = Entry::all();
+        $entries = Entry::with('likers')->get();
 
         return response()->json(
             $entries
@@ -101,5 +103,28 @@ class EntryController extends Controller
         return response()->json([
             'message' => 'Delete Successful'
         ], 200);
+    }
+
+    public function triggerLike($id) {
+        $user = JWTAuth::parseToken()->toUser();
+        $entry = Entry::find($id);
+
+        $liked = $entry->likers()->where('user_id', $user->id)->first();
+
+        if($liked) {
+            $entry->likers()->delete($liked);
+            $message = 'Unliked!';
+        }
+        else {
+            $like = new Liker([
+                'user_id' => $user->id
+            ]);
+            $entry->likers()->save($like);
+            $message = 'Liked!';
+        }
+
+        return response()->json([
+            'message' => $message
+        ],200);
     }
 }

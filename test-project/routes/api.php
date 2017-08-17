@@ -32,6 +32,11 @@ Route::delete('/entry/{id}', [
     'middleware' => 'auth.jwt'
 ]);
 
+Route::post('/entry/{id}', [
+   'uses' => 'EntryController@triggerLike',
+   'middleware' => 'auth.jwt'
+]);
+
 Route::post('/user/login', [
     'uses' => 'UserController@signIn'
 ]);
@@ -58,3 +63,4 @@ Route::put('/user/{id}', [
     'uses' => 'UserController@putUser',
     'middleware' => 'auth.jwt'
 ]);
+
